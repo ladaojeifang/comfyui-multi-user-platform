@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const root = (path = '') => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+const repositoryUrl = import.meta.env.PUBLIC_REPOSITORY_URL;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10191a" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(root('social-card.svg'), Astro.site ?? Astro.url).toString()} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href={root('favicon.svg')} type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳转到正文</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href={root()} aria-label="Comfy Space 首页">
+          <span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>COMFY<span class="brand-space">SPACE</span></span>
+        </a>
+        <button class="menu-toggle" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span></button>
+        <nav id="primary-nav" class="primary-nav" aria-label="主导航">
+          <a href={`${root()}#capabilities`}>功能</a>
+          <a href={`${root()}#workflow`}>工作方式</a>
+          <a href={`${root()}#architecture`}>架构</a>
+          <a href={root('guide/')}>部署指南</a>
+          {repositoryUrl && <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">源代码 <span aria-hidden="true">↗</span></a>}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand footer-brand" href={root()}><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><span>COMFY<span class="brand-space">SPACE</span></span></a>
+          <p>让创作任务有秩序地到达每一台 GPU。</p>
+        </div>
+        <div class="footer-links"><a href={root('guide/')}>部署指南</a><a href={`${root()}#capabilities`}>产品能力</a>{repositoryUrl && <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">项目仓库 ↗</a>}</div>
+        <div class="footer-note"><strong>0.6.1 候选版</strong><span>本项目与 ComfyUI 官方无隶属关系。</span><span>正式发布仍待跨机与安装验收。</span></div>
+      </div>
+    </footer>
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const nav = document.querySelector<HTMLElement>('#primary-nav');
+      toggle?.addEventListener('click', () => {
+        const opened = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!opened));
+        toggle.setAttribute('aria-label', opened ? '打开导航' : '关闭导航');
+        nav?.classList.toggle('is-open', !opened);
+      });
+      nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+        toggle?.setAttribute('aria-expanded', 'false');
+        toggle?.setAttribute('aria-label', '打开导航');
+        nav.classList.remove('is-open');
+      }));
+    </script>
+  </body>
+</html>

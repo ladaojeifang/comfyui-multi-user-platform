@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+const root = (path = '') => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+const repositoryUrl = import.meta.env.PUBLIC_REPOSITORY_URL;
+---
+
+<BaseLayout
+  title="部署指南 · Comfy Space"
+  description="了解 Comfy Space 的中心机、GPU Worker 与浏览器工作台如何在局域网中部署。"
+>
+  <section class="guide-hero">
+    <div class="container guide-hero-grid">
+      <div><span class="kicker">DEPLOYMENT GUIDE / 0.6.1 CANDIDATE</span><h1>从一台中心机，<br />连接整个创作团队。</h1><p>两类 Windows 安装包构成完整工作平台。此页是部署概览；正式上线仍需完成证书和实机验收。</p></div>
+      <div class="guide-stat"><span>01 / CENTER</span><strong>中心机</strong><span>02 / WORKER</span><strong>GPU 节点</strong><span>03 / CLIENTS</span><strong>浏览器</strong></div>
+    </div>
+  </section>
+
+  <section class="section guide-main">
+    <div class="container guide-layout">
+      <aside class="guide-toc" aria-label="本页目录"><span>本页内容</span><a href="#prepare">部署前</a><a href="#center">安装中心机</a><a href="#worker">接入 GPU</a><a href="#browser">打开工作台</a><a href="#direct-access">直接操作</a><a href="#release-status">发布状态</a></aside>
+      <div class="guide-content">
+        <section id="prepare" class="guide-block"><span class="guide-number">00 / PREPARE</span><h2>部署前准备</h2><p>准备一台 Windows 中心机、多台可选的 Windows GPU 机器，以及局域网内可访问中心机的浏览器。ComfyUI、模型及 GPU 驱动在各 GPU 机器上单独维护。</p><ul><li>确定中心机的固定局域网 IP 或 DNS 名称。</li><li>确定浏览器与 Worker 将使用的证书信任方式。</li><li>留出中心机数据库和图片、视频资产的存储空间。</li></ul></section>
+        <section id="center" class="guide-block"><span class="guide-number">01 / CENTER MACHINE</span><h2>安装中心机</h2><p>中心机安装包提供 PostgreSQL 16、API、调度器、资产存储以及 `/admin`、`/app` 两个浏览器页面。已有数据库的升级应先备份，并按安装向导选择复用数据。</p><div class="guide-callout"><b>安装后检查</b><span>确认数据库、API、调度器开机恢复；使用管理员账号登录，并检查工作流和历史任务是否保留。</span></div></section>
+        <section id="worker" class="guide-block"><span class="guide-number">02 / GPU WORKER</span><h2>接入 GPU 节点</h2><p>管理员在 GPU 节点页创建一次性接入码。在 GPU 机器运行 Worker 安装包，填写中心机地址、接入码和本机 ComfyUI 地址。Worker 服务与 ComfyUI 在同一台机器运行。</p><div class="guide-callout"><b>单槽执行</b><span>每台 Worker 同时接收一个平台任务。其余任务继续在中心队列等待；跨机通信不要求共享磁盘。</span></div></section>
+        <section id="browser" class="guide-block"><span class="guide-number">03 / BROWSER WORKSPACES</span><h2>打开浏览器工作台</h2><p>管理员访问中心机的 `/admin`，发布工作流、授权用户并查看队列与 Worker；普通用户访问 `/app`，提交任务、查看进度、预览和下载产物。正式部署应通过受信任 HTTPS 访问。</p><div class="guide-addresses"><span>管理员 <code>https://&lt;中心机名称&gt;/admin</code></span><span>创作者 <code>https://&lt;中心机名称&gt;/app</code></span></div></section>
+        <section id="direct-access" class="guide-block"><span class="guide-number">04 / DIRECT ACCESS</span><h2>独占操作 ComfyUI</h2><p>需要直接使用 ComfyUI 原生界面时，管理员或获得指定节点授权的用户可从工作台申请独占。这个入口与普通工作流执行权限分开。</p><ol class="guide-ordered"><li><b>管理员授权。</b>在“直接操作”页面选择 GPU 节点、用户或用户组，点击“授予”。被授权用户登录后可看到该节点。</li><li><b>用户申请。</b>点击“申请直接操作”，等待节点现有平台任务结束、ComfyUI 本地队列清空。交接期间可点击“撤销申请”。</li><li><b>打开界面。</b>页面显示“直接操作中”后点击“打开 ComfyUI”。浏览器通过中心机的 8444 网关进入，无需填写 Worker 的 8188 地址。需要更久时可点击“延长时间”。</li><li><b>结束操作。</b>点击“结束操作”后停止新提交，已有手动队列继续运行。平台核对队列和归档状态后，节点才恢复接收中心任务。</li></ol><div class="guide-callout"><b>记录与异常</b><span>标准 ComfyUI 任务可在“直接操作记录”查看；插件专有接口若绕过标准任务接口，仅保留访问审计。若状态显示“需要核对”，请管理员检查原因并使用“核对并恢复”，不要绕过核对直接恢复派发。</span></div></section>
+        <section id="release-status" class="guide-block"><span class="guide-number">05 / RELEASE STATUS</span><h2>目前仍是候选版</h2><p>0.6.1 已具备本地构建与自动化验收记录；全新机器安装、独立 GPU 图片和视频流程、正式 HTTPS 与代码签名仍需现场验证。请先用于测试与评估，不要将候选版描述为正式发布通过。</p>{repositoryUrl && <a class="button button-dark" href={repositoryUrl} target="_blank" rel="noopener noreferrer">查看项目仓库 <span aria-hidden="true">↗</span></a>}</section>
+      </div>
+    </div>
+  </section>
+
+  <section class="guide-end"><div class="container"><span>下一步</span><h2>让工作流，走进团队。</h2><a class="button button-primary" href={root()}>返回产品主页 <span aria-hidden="true">↗</span></a></div></section>
+</BaseLayout>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#10191a"/>
+  <path d="M710 0v630M820 0v630M930 0v630M1040 0v630M0 140h1200M0 250h1200M0 360h1200M0 470h1200" stroke="#2b3c3d" stroke-width="1"/>
+  <circle cx="895" cy="315" r="180" fill="none" stroke="#a7f171" stroke-width="2" opacity=".7"/>
+  <circle cx="895" cy="315" r="110" fill="none" stroke="#a7f171" stroke-width="2" opacity=".35"/>
+  <circle cx="895" cy="315" r="24" fill="#a7f171"/>
+  <text x="76" y="135" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#a7f171" letter-spacing="7">COMFY SPACE</text>
+  <text x="76" y="310" font-family="Arial, sans-serif" font-size="68" font-weight="700" fill="#f0f4ec">让每一台 GPU</text>
+  <text x="76" y="400" font-family="Arial, sans-serif" font-size="68" font-weight="700" fill="#f0f4ec">进入同一条创作流水线</text>
+  <text x="80" y="500" font-family="Arial, sans-serif" font-size="25" fill="#aabbb6">局域网多用户 ComfyUI 工作平台 · 0.6.1 候选版</text>
+</svg>
