@@ -1,7 +1,7 @@
 # Comfy Space 宣传主页
 
 Astro 静态站点，介绍 ComfyUI 多用户平台的浏览器工作台、中心队列、GPU Worker 和独占直接操作。它与正式应用分开运行，不连接数据库，也不包含安装包或开发凭证。
-
+https://ladaojeifang.github.io/comfyui-multi-user-platform  
 ## 本地预览
 
 在 `site` 目录运行：
